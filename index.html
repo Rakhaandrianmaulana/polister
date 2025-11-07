@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Memuat Ikon (untuk Navigasi) -->
+    <!-- Memuat Ikon (untuk Navigasi & Tombol Mute) -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
@@ -60,9 +60,15 @@
         }
         .modal-content {
             max-height: 90vh;
+            overflow-y: auto; /* PERBAIKAN: Menjamin bisa scroll di layar kecil */
         }
 
         /* Game Cilukba */
+        .game-cell {
+            display: flex; /* PERBAIKAN: Untuk memusatkan emoji fallback */
+            align-items: center;
+            justify-content: center;
+        }
         .game-cell:hover {
             transform: scale(1.05);
         }
@@ -143,7 +149,9 @@
     -->
     <div id="nameModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
         <div class="bg-white bg-opacity-90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl text-center w-full max-w-md animate-fade-in">
-            <img src="https://feeldreams.github.io/pandapanah.gif" alt="Panda lucu" class="w-32 h-32 mx-auto mb-4 rounded-full shadow-lg" onerror="this.style.display='none'">
+            <!-- PERBAIKAN: Menambahkan fallback onerror -->
+            <img src="https://feeldreams.github.io/pandapanah.gif" alt="Panda lucu" class="w-32 h-32 mx-auto mb-4 rounded-full shadow-lg" 
+                 onerror="this.outerHTML = '<div class=\'w-32 h-32 mx-auto mb-4 flex items-center justify-center bg-gray-200 rounded-full text-5xl\'>🐼</div>'">
             <h2 class="text-3xl font-display text-pink-600 mb-2">Halo, Kamu!</h2>
             <p class="text-lg mb-4">Sebelum kita mulai seru-seruan, boleh tulis nama panggilanmu dulu?</p>
             <input type="text" id="nameInput" class="w-full px-4 py-3 border-2 border-pink-300 rounded-xl text-lg text-center focus:outline-none focus:ring-2 focus:ring-pink-500" placeholder="Tulis namamu di sini...">
@@ -166,7 +174,9 @@
                     Hai, <span class="userNameDisplay text-yellow-500">Kamu</span>!
                 </h1>
                 <p class="text-xl text-gray-700 mt-2">Selamat datang di hadiah spesial ini!</p>
-                <img src="https://feeldreams.github.io/weee.gif" alt="Stiker weee" class="w-40 h-40 mx-auto mt-4" onerror="this.style.display='none'">
+                <!-- PERBAIKAN: Menambahkan fallback onerror -->
+                <img src="https://feeldreams.github.io/weee.gif" alt="Stiker weee" class="w-40 h-40 mx-auto mt-4" 
+                     onerror="this.outerHTML = '<div class=\'w-40 h-40 mx-auto mt-4 flex items-center justify-center bg-gray-200 rounded-lg text-gray-500\'>[Stiker Lucu]</div>'">
                 <p class="text-lg mt-4">Aku udah siapin beberapa game dan kejutan kecil buatmu. Cek "Zona Game" atau "Zona Santai" di bawah ya!</p>
             </div>
         </div>
@@ -175,7 +185,7 @@
         <div id="page-games" class="w-full max-w-lg animate-fade-in hidden space-y-6">
             <h1 class="text-4xl font-display text-white shadow-text text-center">Zona Game</h1>
             
-            <!-- Tombol Game Kertas Gunting Batu (BARU) -->
+            <!-- Tombol Game Kertas Gunting Batu -->
             <div class="bg-white bg-opacity-90 backdrop-blur-sm p-6 rounded-2xl shadow-xl text-center">
                 <h3 class="text-2xl font-display text-green-600 mb-3">Game: Kertas Gunting Batu!</h3>
                 <p class="mb-4">Ayo adu suit lawan komputer. Siapa yang bakal menang? 🪨✂️📄</p>
@@ -207,7 +217,7 @@
         <div id="page-fun" class="w-full max-w-lg animate-fade-in hidden space-y-6">
             <h1 class="text-4xl font-display text-white shadow-text text-center">Zona Santai</h1>
 
-            <!-- Tombol Generator Semangat (BARU) -->
+            <!-- Tombol Generator Semangat -->
             <div class="bg-white bg-opacity-90 backdrop-blur-sm p-6 rounded-2xl shadow-xl text-center">
                 <h3 class="text-2xl font-display text-yellow-600 mb-3">Butuh Semangat?</h3>
                 <p class="mb-4">Klik di sini buat dapetin kutipan penyemangat acak. GRATIS!</p>
@@ -255,6 +265,14 @@
     </footer>
 
     <!-- 
+      TOMBOL MUTE (FITUR BARU)
+    -->
+    <button id="muteButton" class="hidden fixed top-4 right-4 z-50 bg-white bg-opacity-70 backdrop-blur-sm text-pink-500 p-2 rounded-full shadow-md text-2xl">
+        <ion-icon name="volume-high-outline"></ion-icon>
+    </button>
+
+
+    <!-- 
       MODAL-MODAL
       (Pop-up untuk game dan kejutan)
     -->
@@ -263,7 +281,9 @@
     <div id="rewardModal" class="modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-40 p-4">
         <div class="modal-content bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl text-center w-full max-w-md animate-fade-in relative">
             <button class="close-modal-btn absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-4xl font-bold">&times;</button>
-            <img src="https://feeldreams.github.io/emawh.gif" alt="Stiker peluk" class="w-40 h-40 mx-auto mb-4 rounded-lg" onerror="this.style.display='none'">
+            <!-- PERBAIKAN: Menambahkan fallback onerror -->
+            <img src="https://feeldreams.github.io/emawh.gif" alt="Stiker peluk" class="w-40 h-40 mx-auto mb-4 rounded-lg" 
+                 onerror="this.outerHTML = '<div class=\'w-40 h-40 mx-auto mb-4 flex items-center justify-center bg-gray-200 rounded-lg text-5xl\'>🤗</div>'">
             <h2 class="text-3xl font-display text-teal-600 mb-2">TADAAAAA!</h2>
             <p class="text-lg mb-4">
                 Ini dia <i>virtual hug</i> dan suntikan semangat spesial buat 
@@ -288,11 +308,13 @@
         </div>
     </div>
 
-    <!-- Modal Generator Semangat (BARU) -->
+    <!-- Modal Generator Semangat -->
     <div id="quoteModal" class="modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-40 p-4">
         <div class="modal-content bg-white bg-opacity-95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl text-center w-full max-w-md animate-fade-in relative">
             <button class="close-modal-btn absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-4xl font-bold">&times;</button>
-            <img src="https://feeldreams.github.io/pandapanah.gif" alt="Panda semangat" class="w-32 h-32 mx-auto mb-4 rounded-full shadow-lg" onerror="this.style.display='none'">
+            <!-- PERBAIKAN: Menambahkan fallback onerror -->
+            <img src="https://feeldreams.github.io/pandapanah.gif" alt="Panda semangat" class="w-32 h-32 mx-auto mb-4 rounded-full shadow-lg" 
+                 onerror="this.outerHTML = '<div class=\'w-32 h-32 mx-auto mb-4 flex items-center justify-center bg-gray-200 rounded-full text-5xl\'>🐼</div>'">
             <h2 class="text-3xl font-display text-yellow-600 mb-4">Suntikan Semangat!</h2>
             <div class="min-h-[100px] flex items-center justify-center p-4 bg-yellow-50 rounded-lg">
                 <p id="quoteDisplay" class="text-xl italic text-yellow-800">"..."</p>
@@ -322,7 +344,7 @@
     
     <!-- Modal Game Memory Match -->
     <div id="memoryModal" class="modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-40 p-4">
-        <div class="modal-content bg-white bg-opacity-95 backdrop-blur-sm p-6 rounded-2xl shadow-2xl w-full max-w-lg animate-fade-in relative overflow-y-auto">
+        <div class="modal-content bg-white bg-opacity-95 backdrop-blur-sm p-6 rounded-2xl shadow-2xl w-full max-w-lg animate-fade-in relative">
             <button class="close-modal-btn absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-4xl font-bold">&times;</button>
             <h3 class="text-2xl font-display text-blue-600 mb-3 text-center">Game: Memory Match!</h3>
             <div class="flex justify-between items-center mb-4 px-2">
@@ -341,9 +363,9 @@
         </div>
     </div>
     
-    <!-- Modal Game Kertas Gunting Batu (BARU) -->
+    <!-- Modal Game Kertas Gunting Batu -->
     <div id="kgbModal" class="modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-40 p-4">
-        <div class="modal-content bg-white bg-opacity-95 backdrop-blur-sm p-6 rounded-2xl shadow-2xl w-full max-w-lg animate-fade-in relative overflow-y-auto">
+        <div class="modal-content bg-white bg-opacity-95 backdrop-blur-sm p-6 rounded-2xl shadow-2xl w-full max-w-lg animate-fade-in relative">
             <button class="close-modal-btn absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-4xl font-bold">&times;</button>
             <h3 class="text-2xl font-display text-green-600 mb-4 text-center">Game: Kertas Gunting Batu!</h3>
             
@@ -390,6 +412,11 @@
             const userNameDisplays = document.querySelectorAll('.userNameDisplay');
             const bgMusic = document.getElementById('bgMusic');
             let userName = "Kamu";
+            
+            // Variabel Tombol Mute (FITUR BARU)
+            const muteButton = document.getElementById('muteButton');
+            const muteIcon = muteButton.querySelector('ion-icon');
+            let isMuted = true; // Asumsikan audio mati di awal
 
             // --- Logika Halaman Utama (Nama & Navigasi) ---
 
@@ -405,15 +432,15 @@
                         span.textContent = userName;
                     });
                     
-                    // --- INI PERBAIKANNYA ---
-                    // Secara eksplisit sembunyikan semua modal
+                    // Sembunyikan semua modal lain (Perbaikan Bug v4)
                     document.querySelectorAll('.modal').forEach(modal => {
                         modal.style.display = 'none';
                     });
                     
-                    nameModal.style.display = 'none'; // Sembunyikan modal nama
-                    mainContent.classList.remove('hidden'); // Tampilkan konten utama
-                    navBar.classList.remove('hidden'); // Tampilkan navigasi
+                    nameModal.style.display = 'none'; 
+                    mainContent.classList.remove('hidden'); 
+                    navBar.classList.remove('hidden'); 
+                    muteButton.classList.remove('hidden'); // Tampilkan tombol mute
                     document.body.style.overflow = 'auto';
                     
                     // Set halaman utama (beranda) sebagai yang aktif
@@ -422,7 +449,15 @@
                     document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
                     document.getElementById('nav-home').classList.add('active');
 
-                    bgMusic.play().catch(e => console.warn("Autoplay musik diblokir. Menunggu interaksi."));
+                    // Coba putar musik dan update ikon mute
+                    bgMusic.play().then(() => {
+                        isMuted = false;
+                        muteIcon.setAttribute('name', 'volume-high-outline');
+                    }).catch(e => {
+                        console.warn("Autoplay gagal, audio di-mute.");
+                        isMuted = true;
+                        muteIcon.setAttribute('name', 'volume-mute-outline');
+                    });
                 }
             });
 
@@ -454,18 +489,38 @@
             
             allCloseButtons.forEach(button => {
                 button.addEventListener('click', (e) => {
-                    closeModal(e.target.closest('.modal'));
+                    const modal = e.target.closest('.modal');
+                    
+                    // PERBAIKAN: Hentikan game jika modalnya ditutup
+                    if (modal.id === 'cilukbaModal') {
+                        endCilukbaGame(true); // 'true' berarti ditutup paksa
+                    }
+                    
+                    closeModal(modal);
                 });
+            });
+            
+            // 4. Logika Tombol Mute (FITUR BARU)
+            muteButton.addEventListener('click', () => {
+                if (isMuted) {
+                    bgMusic.play(); // Coba mainkan lagi
+                    isMuted = false;
+                    muteIcon.setAttribute('name', 'volume-high-outline');
+                } else {
+                    bgMusic.pause();
+                    isMuted = true;
+                    muteIcon.setAttribute('name', 'volume-mute-outline');
+                }
             });
 
             // --- Logika "Zona Santai" ---
 
-            // 4. Modal Reward (Virtual Hug)
+            // 5. Modal Reward (Virtual Hug)
             document.getElementById('rewardButton').addEventListener('click', () => {
                 openModal(document.getElementById('rewardModal'));
             });
 
-            // 5. Modal Kerang Ajaib
+            // 6. Modal Kerang Ajaib
             const magicShellModal = document.getElementById('magicShellModal');
             const askShellButton = document.getElementById('askShellButton');
             const shellAnswer = document.getElementById('shellAnswer');
@@ -499,7 +554,7 @@
                 }, 1500);
             });
 
-            // 6. Modal Generator Semangat (BARU)
+            // 7. Modal Generator Semangat
             const quoteModal = document.getElementById('quoteModal');
             const quoteDisplay = document.getElementById('quoteDisplay');
             const newQuoteButton = document.getElementById('newQuoteButton');
@@ -522,7 +577,7 @@
             }
 
             document.getElementById('launchQuote').addEventListener('click', () => {
-                generateQuote(); // Langsung generate 1 quote saat dibuka
+                generateQuote(); 
                 openModal(quoteModal);
             });
             newQuoteButton.addEventListener('click', generateQuote);
@@ -530,7 +585,7 @@
 
             // --- Logika "Zona Game" ---
 
-            // 7. Game Cilukba Cepat
+            // 8. Game Cilukba Cepat
             const cilukbaModal = document.getElementById('cilukbaModal');
             const startGameButton = document.getElementById('startGameButton');
             const gameGrid = document.getElementById('gameGrid');
@@ -557,7 +612,7 @@
 
                 resetCilukbaGrid();
                 cilukbaTimer = setInterval(popMole, 900);
-                setTimeout(endCilukbaGame, 15000); // Game 15 detik
+                setTimeout(() => endCilukbaGame(false), 15000); // Game 15 detik
             }
 
             function resetCilukbaGrid() {
@@ -573,11 +628,14 @@
             }
 
             function whack(e) {
-                if (!cilukbaActive || !e.target.classList.contains('mole')) return;
+                // Pastikan targetnya adalah .game-cell, bukan gambar/emoji di dalamnya
+                const targetCell = e.target.closest('.game-cell');
+                if (!cilukbaActive || !targetCell || !targetCell.classList.contains('mole')) return;
+                
                 cilukbaScore++;
                 gameScore.textContent = cilukbaScore;
-                e.target.classList.remove('mole');
-                e.target.innerHTML = '';
+                targetCell.classList.remove('mole');
+                targetCell.innerHTML = '';
             }
 
             function popMole() {
@@ -588,18 +646,26 @@
                 }
                 const randomCell = gameCells[Math.floor(Math.random() * gameCells.length)];
                 randomCell.classList.add('mole');
-                randomCell.innerHTML = `<img src="https://feeldreams.github.io/cilukba.gif" class="w-full h-full object-cover rounded-lg pointer-events-none" alt="Cilukba" onerror="this.style.display='none'">`;
+                
+                // PERBAIKAN: Menambahkan fallback onerror yang lebih baik
+                randomCell.innerHTML = `<img src="https://feeldreams.github.io/cilukba.gif" class="w-full h-full object-cover rounded-lg pointer-events-none" alt="Cilukba" 
+                                             onerror="this.outerHTML = '<span class=\\'text-5xl md:text-6xl pointer-events-none animate-pulse\\'>👻</span>'">`;
             }
 
-            function endCilukbaGame() {
+            // PERBAIKAN: Fungsi untuk menghentikan game (timer)
+            function endCilukbaGame(isForcedStop) {
                 cilukbaActive = false;
                 clearInterval(cilukbaTimer);
                 startGameButton.disabled = false;
                 startGameButton.textContent = "Mulai Main Lagi!";
-                gameGrid.innerHTML = `<div class="col-span-3 text-center p-10 text-2xl font-display text-purple-800">Game Selesai!<br>Skor Akhir: ${cilukbaScore}</div>`;
+                
+                if (!isForcedStop) {
+                    gameGrid.innerHTML = `<div class="col-span-3 text-center p-10 text-2xl font-display text-purple-800">Game Selesai!<br>Skor Akhir: ${cilukbaScore}</div>`;
+                }
+                // Jika dipaksa stop (isForcedStop = true), kita tidak tampilkan pesan "Game Selesai", biarkan resetGrid yg urus
             }
             
-            // 8. Game Memory Match
+            // 9. Game Memory Match
             const memoryModal = document.getElementById('memoryModal');
             const memoryGrid = document.getElementById('memoryGrid');
             const memoryMovesEl = document.getElementById('memoryMoves');
@@ -696,7 +762,7 @@
                 }
             }
             
-            // 9. Game Kertas Gunting Batu (BARU)
+            // 10. Game Kertas Gunting Batu
             const kgbModal = document.getElementById('kgbModal');
             const kgbPlayerScoreEl = document.getElementById('kgbPlayerScore');
             const kgbCompScoreEl = document.getElementById('kgbCompScore');
