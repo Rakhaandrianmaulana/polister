@@ -1,16 +1,24 @@
 {
-  "redirects": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "https://i-dont-know-eta.vercel.app/",
-      "permanent": false,
+      "src": "/(.*)",
+      "dest": "/index.html",
       "has": [
         {
           "type": "header",
           "key": "x-vercel-ip-country",
-          "value": "(?!ID).*"
+          "value": "ID"
         }
       ]
+    },
+    {
+      "src": "/(.*)",
+      "headers": {
+        "Content-Type": "text/html; charset=utf-8"
+      },
+      "continue": false,
+      "status": 403,
+      "body": "<!DOCTYPE html><html><head><title>Access Restricted</title><meta charset=\"utf-8\"><style>body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);margin:0;padding:0;display:flex;justify-content:center;align-items:center;min-height:100vh;color:white;text-align:center}.container{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);padding:50px;border-radius:15px;box-shadow:0 8px 32px rgba(0,0,0,0.3);max-width:500px;border:1px solid rgba(255,255,255,0.2)}h1{font-size:2.5em;margin-bottom:20px;text-shadow:2px 2px 4px rgba(0,0,0,0.3)}p{font-size:1.2em;line-height:1.6;margin-bottom:15px;text-shadow:1px 1px 2px rgba(0,0,0,0.3)}.flag{font-size:4em;margin-bottom:20px}</style></head><body><div class=\"container\"><div class=\"flag\">🇮🇩</div><h1>🚫 NO ACCESS GRANTED</h1><p><strong>Website ini hanya dapat diakses dari wilayah Indonesia.</strong></p><p>This website is restricted to Indonesian territory only.</p><p>Untuk akses, gunakan koneksi internet dari Indonesia.</p></div></body></html>"
     }
   ]
 }
